@@ -1,0 +1,44 @@
+services:
+  # ===========================================
+  # PostgreSQL 16
+  # ===========================================
+  db:
+    image: postgres:16-alpine
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: elite_cars
+    ports:
+      - "5433:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready -U postgres -d elite_cars" ]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+      start_period: 10s
+
+  # ===========================================
+  # Next.js Application
+  # ===========================================
+  web:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    restart: unless-stopped
+    ports:
+      - "3001:3000"
+    environment:
+      DATABASE_URL: "postgresql://postgres:postgres@db:5432/elite_cars?schema=public"
+      AUTH_SECRET: "${AUTH_SECRET:-change-me-in-production-generate-with-npx-auth-secret}"
+      AUTH_URL: "http://localhost:3000"
+      NODE_ENV: production
+    depends_on:
+      db:
+        condition: service_healthy
+
+volumes:
+  postgres_data:
+    driver: local
