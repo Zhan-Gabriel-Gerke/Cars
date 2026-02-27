@@ -1,13 +1,18 @@
 import { signIn } from "@/auth";
+import { redirect } from "next/navigation";
+import { revalidatePath } from "next/cache";
+// @ts-expect-error - CredentialsSignin is not typed
+import { CredentialsSignin, AuthError } from "next-auth";
 import Link from "next/link";
 
-export default function SignInPage({
-    searchParams,
-}: {
-    searchParams: { callbackUrl?: string; error?: string; registered?: string };
-}) {
-    const error = searchParams.error;
-    const registered = searchParams.registered;
+export default async function SignInPage(
+    props: {
+        searchParams: Promise<{ callbackUrl?: string; error?: string; registered?: string }>;
+    }
+) {
+    const searchParams = await props.searchParams;
+    const error = searchParams?.error;
+    const registered = searchParams?.registered;
 
     return (
         <div className="min-h-screen flex items-center justify-center bg-dark-950 p-4 relative overflow-hidden">
@@ -47,7 +52,35 @@ export default function SignInPage({
                 <form
                     action={async (formData) => {
                         "use server";
-                        await signIn("credentials", formData);
+                        try {
+                            await signIn("credentials", formData);
+                        } catch (error: any) {
+                            console.log("LOGIN CATCH:", {
+                                name: error?.name,
+                                message: error?.message,
+                                type: error?.type,
+                            });
+
+                            // Check if it's a redirect error from next/navigation
+                            if (error?.message === "NEXT_REDIRECT") {
+                                // Let Next.js handle it
+                                throw error;
+                            }
+
+                            // If it's an AuthError or CredentialsSignin, redirect manually
+                            if (error?.name === "CredentialsSignin" || error?.type === "CredentialsSignin" || error instanceof CredentialsSignin || error?.name === "u") {
+                                revalidatePath("/auth/signin");
+                                redirect("/auth/signin?error=CredentialsSignin");
+                            }
+
+                            // Fallback for NextAuth errors
+                            if (error?.message?.includes("Credential") || String(error).includes("Credentials") || error?.message?.includes("errors.authjs.dev")) {
+                                revalidatePath("/auth/signin");
+                                redirect("/auth/signin?error=CredentialsSignin");
+                            }
+
+                            throw error;
+                        }
                     }}
                     className="space-y-6"
                 >

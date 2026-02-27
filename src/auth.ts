@@ -1,4 +1,5 @@
-import NextAuth from "next-auth";
+// @ts-expect-error - CredentialsSignin is not typed in this NextAuth beta version but is exported at runtime
+import NextAuth, { CredentialsSignin } from "next-auth";
 import { PrismaAdapter } from "@auth/prisma-adapter";
 import Credentials from "next-auth/providers/credentials";
 import bcrypt from "bcryptjs";
@@ -23,7 +24,7 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
             },
             async authorize(credentials) {
                 if (!credentials?.email || !credentials?.password) {
-                    throw new Error("Email and password are required");
+                    throw new CredentialsSignin();
                 }
 
                 const user = await prisma.user.findUnique({
@@ -31,7 +32,7 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
                 });
 
                 if (!user || !user.password) {
-                    throw new Error("Invalid credentials");
+                    throw new CredentialsSignin();
                 }
 
                 const isPasswordValid = await bcrypt.compare(
@@ -40,7 +41,7 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
                 );
 
                 if (!isPasswordValid) {
-                    throw new Error("Invalid credentials");
+                    throw new CredentialsSignin();
                 }
 
                 return {

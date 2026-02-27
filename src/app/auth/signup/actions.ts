@@ -1,3 +1,5 @@
+"use server";
+
 import { hash } from "bcryptjs";
 import { prisma } from "@/lib/prisma";
 import { redirect } from "next/navigation";
