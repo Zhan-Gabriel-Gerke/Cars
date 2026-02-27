@@ -80,3 +80,22 @@ model VerificationToken {
 
   @@unique([identifier, token])
 }
+
+// ===========================================
+// Application Models
+// ===========================================
+
+model Car {
+  id           String   @id @default(cuid())
+  category     String
+  name         String
+  seats        Int
+  topSpeed     Int
+  engine       String
+  transmission String
+  pricePerDay  Float
+  imageUrl     String?
+
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+}
