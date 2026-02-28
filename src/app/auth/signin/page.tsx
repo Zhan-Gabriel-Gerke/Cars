@@ -4,6 +4,7 @@ import { revalidatePath } from "next/cache";
 // @ts-expect-error - CredentialsSignin is not typed
 import { CredentialsSignin, AuthError } from "next-auth";
 import Link from "next/link";
+import ForgotPasswordLink from "@/components/ForgotPasswordLink";
 
 export default async function SignInPage(
     props: {
@@ -108,9 +109,7 @@ export default async function SignInPage(
                             <label className="block text-sm font-medium text-dark-200">
                                 Password
                             </label>
-                            <a href="#" className="text-xs text-gold-400 hover:text-gold-300 transition-colors">
-                                Forgot password?
-                            </a>
+                            <ForgotPasswordLink />
                         </div>
                         <input
                             name="password"
@@ -139,11 +138,6 @@ export default async function SignInPage(
                             Create one now
                         </Link>
                     </p>
-                    <div className="border-t border-white/5 pt-3 mt-3">
-                        <p className="text-xs text-dark-400">
-                            Demo: admin@elitecars.com / admin123
-                        </p>
-                    </div>
                 </div>
             </div>
         </div>

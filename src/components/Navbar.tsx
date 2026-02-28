@@ -66,12 +66,7 @@ export default function Navbar() {
                             </>
                         ) : (
                             <>
-                                <Link
-                                    href="/auth/signin"
-                                    className="text-sm font-medium text-dark-200 transition-colors hover:text-white"
-                                >
-                                    Sign In
-                                </Link>
+
                                 <Link
                                     href="/auth/signin"
                                     className="rounded-sm bg-gold-400 px-5 py-2.5 text-sm font-semibold text-dark-950 uppercase tracking-wider transition-all duration-300 hover:bg-gold-300 hover:shadow-lg hover:shadow-gold-400/20"
@@ -139,13 +134,7 @@ export default function Navbar() {
                                     </>
                                 ) : (
                                     <>
-                                        <Link
-                                            href="/auth/signin"
-                                            onClick={() => setMobileOpen(false)}
-                                            className="block w-full text-left text-dark-200 hover:text-white transition-colors"
-                                        >
-                                            Sign In
-                                        </Link>
+
                                         <Link
                                             href="/auth/signin"
                                             onClick={() => setMobileOpen(false)}

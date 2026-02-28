@@ -1,5 +1,7 @@
 import Hero from "@/components/Hero";
 import SearchBar from "@/components/SearchBar";
+
+export const dynamic = "force-dynamic";
 import FleetSection from "@/components/FleetSection";
 import ServicesSection from "@/components/ServicesSection";
 import LifestyleSection from "@/components/LifestyleSection";

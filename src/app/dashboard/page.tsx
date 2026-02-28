@@ -1,6 +1,8 @@
 import { requireAuth } from "@/lib/auth-guard";
 import { signOut } from "@/auth";
 import Link from "next/link";
+import { Calendar, Award, User } from "lucide-react";
+import ViewBenefitsButton from "@/components/ViewBenefitsButton";
 
 export default async function DashboardPage() {
     const session = await requireAuth();
@@ -44,23 +46,72 @@ export default async function DashboardPage() {
 
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
 
-                    {/* Role Status (Debug) */}
-                    <div className="rounded-xl border border-white/10 bg-dark-900/40 p-6 backdrop-blur-md">
-                        <h2 className="text-sm font-medium text-dark-300 uppercase tracking-wider mb-4">
-                            Account Status
-                        </h2>
-                        <div className="space-y-3">
-                            <p className="text-sm text-white">
-                                <span className="text-dark-400">Email:</span> {session.user.email}
-                            </p>
-                            <p className="text-sm text-white">
-                                <span className="text-dark-400">Role:</span>{" "}
-                                <span className="inline-flex rounded-full bg-gold-400/10 px-2.5 py-0.5 text-xs font-semibold text-gold-400 border border-gold-400/20">
-                                    {session.user.role}
-                                </span>
-                            </p>
+                    {/* Account Status */}
+                    <div className="rounded-xl border border-white/10 bg-dark-900/40 p-6 backdrop-blur-md flex flex-col justify-between">
+                        <div>
+                            <h2 className="text-sm font-medium text-dark-300 uppercase tracking-wider mb-4 flex items-center gap-2">
+                                <User className="h-4 w-4 text-gold-400" />
+                                Account Status
+                            </h2>
+                            <div className="space-y-3">
+                                <p className="text-sm text-white">
+                                    <span className="text-dark-400">Email:</span> {session.user.email}
+                                </p>
+                                <p className="text-sm text-white flex items-center gap-2">
+                                    <span className="text-dark-400">Role:</span>
+                                    <span className="inline-flex rounded-full bg-gold-400/10 px-2.5 py-0.5 text-xs font-semibold text-gold-400 border border-gold-400/20">
+                                        {session.user.role}
+                                    </span>
+                                </p>
+                                <p className="text-xs text-dark-400 mt-4 italic">
+                                    (Demo Mode) Profile editing is disabled.
+                                </p>
+                            </div>
                         </div>
                     </div>
+
+                    {/* Active Reservations */}
+                    <div className="rounded-xl border border-white/10 bg-dark-900/40 p-6 backdrop-blur-md flex flex-col justify-between">
+                        <div>
+                            <h2 className="text-sm font-medium text-dark-300 uppercase tracking-wider mb-4 flex items-center gap-2">
+                                <Calendar className="h-4 w-4 text-gold-400" />
+                                Active Reservations
+                            </h2>
+                            <div className="flex flex-col items-center justify-center py-4 text-center">
+                                <p className="text-sm text-dark-400 mb-2">You have no upcoming trips.</p>
+                            </div>
+                        </div>
+                        <Link
+                            href="/#fleet"
+                            className="mt-4 w-full rounded-md border border-gold-400/30 bg-gold-400/5 px-4 py-2.5 text-center text-sm font-medium text-gold-400 transition-colors hover:bg-gold-400 hover:text-dark-950"
+                        >
+                            Book a Vehicle
+                        </Link>
+                    </div>
+
+                    {/* Elite Status */}
+                    <div className="rounded-xl border border-white/10 bg-dark-900/40 p-6 backdrop-blur-md flex flex-col justify-between">
+                        <div>
+                            <h2 className="text-sm font-medium text-dark-300 uppercase tracking-wider mb-4 flex items-center gap-2">
+                                <Award className="h-4 w-4 text-gold-400" />
+                                Elite Tier
+                            </h2>
+                            <div className="space-y-4">
+                                <div>
+                                    <div className="flex justify-between text-sm mb-2">
+                                        <span className="text-white font-medium">Gold Member</span>
+                                        <span className="text-gold-400">2,450 pts</span>
+                                    </div>
+                                    <div className="h-1.5 w-full rounded-full bg-dark-800 overflow-hidden">
+                                        <div className="h-full bg-gold-400 w-[65%] rounded-full"></div>
+                                    </div>
+                                    <p className="text-xs text-dark-400 mt-2">550 pts to Platinum Tier</p>
+                                </div>
+                            </div>
+                        </div>
+                        <ViewBenefitsButton />
+                    </div>
+
                 </div>
 
                 {/* Admin Actions */}

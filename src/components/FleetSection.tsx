@@ -1,57 +1,17 @@
 import { motion } from "framer-motion";
 import Link from "next/link";
 import { ArrowRight } from "lucide-react";
-import type { Car } from "@/types/car";
 import { CarCarousel } from "@/components/CarCarousel";
+import { prisma } from "@/lib/prisma";
 
-// Simulate database fetch
-async function getCuratedFleet(): Promise<Car[]> {
-    return [
-        {
-            id: "1",
-            category: "SPORTS",
-            name: "Lamborghini Aventador",
-            seats: 2,
-            topSpeed: 350,
-            engine: "V12",
-            transmission: "Auto",
-            pricePerDay: 2800,
-            imageUrl: "", // Left empty to show the placeholder emoji per original UI
-        },
-        {
-            id: "2",
-            category: "ULTRA LUXURY",
-            name: "Rolls-Royce Phantom",
-            seats: 4,
-            topSpeed: 250,
-            engine: "V12",
-            transmission: "Auto",
-            pricePerDay: 5200,
-            imageUrl: "",
-        },
-        {
-            id: "3",
-            category: "SPORTS",
-            name: "Porsche 911 GT3",
-            seats: 2,
-            topSpeed: 318,
-            engine: "H6",
-            transmission: "PDK",
-            pricePerDay: 1950,
-            imageUrl: "",
-        },
-        {
-            id: "4",
-            category: "HYPERCAR",
-            name: "Ferrari SF90 Stradale",
-            seats: 2,
-            topSpeed: 340,
-            engine: "V8+E",
-            transmission: "Auto",
-            pricePerDay: 3500,
-            imageUrl: "",
-        },
-    ];
+// Fetch up to 4 cars from the real database for the Curated Fleet section
+async function getCuratedFleet() {
+    return await prisma.car.findMany({
+        take: 4,
+        orderBy: {
+            createdAt: "desc"
+        }
+    });
 }
 
 export default async function FleetSection() {
