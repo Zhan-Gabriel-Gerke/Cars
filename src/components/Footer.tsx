@@ -45,6 +45,7 @@ export default function Footer() {
                                 <a
                                     key={s}
                                     href="#"
+                                    onClick={(e) => handleMockLink(e, `${s} Profile`)}
                                     className="flex h-9 w-9 items-center justify-center rounded-full border border-white/10 text-xs font-bold text-dark-300 transition-all duration-300 hover:border-gold-400/50 hover:text-gold-400 hover:bg-gold-400/5"
                                 >
                                     {s}
@@ -126,10 +127,10 @@ export default function Footer() {
                         &copy; 2026 Elite Cars Group. All rights reserved.
                     </p>
                     <div className="flex items-center gap-6">
-                        <a href="#" className="text-xs text-dark-500 transition-colors hover:text-dark-300">
+                        <a href="#" onClick={(e) => handleMockLink(e, "Privacy Policy")} className="text-xs text-dark-500 transition-colors hover:text-dark-300">
                             Privacy Policy
                         </a>
-                        <a href="#" className="text-xs text-dark-500 transition-colors hover:text-dark-300">
+                        <a href="#" onClick={(e) => handleMockLink(e, "Terms of Service")} className="text-xs text-dark-500 transition-colors hover:text-dark-300">
                             Terms of Service
                         </a>
                     </div>
