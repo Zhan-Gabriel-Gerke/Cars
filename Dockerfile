@@ -39,8 +39,9 @@ ENV HOSTNAME="0.0.0.0"
 RUN addgroup --system --gid 1001 nodejs
 RUN adduser --system --uid 1001 nextjs
 
-# Copy public assets
-COPY --from=builder /app/public ./public
+# Copy public assets and give nextjs user ownership of the uploads directory
+COPY --from=builder --chown=nextjs:nodejs /app/public ./public
+RUN mkdir -p /app/uploads && chown nextjs:nodejs /app/uploads
 
 # Copy standalone output
 COPY --from=builder --chown=nextjs:nodejs /app/.next/standalone ./

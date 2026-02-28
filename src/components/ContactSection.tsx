@@ -52,10 +52,11 @@ export default function ContactSection() {
 
     const onSubmit = async (data: ContactFormData) => {
         setIsSubmitting(true);
-        // Simulate API call
-        await new Promise((resolve) => setTimeout(resolve, 1500));
+        // Simulate API call for UI realism
+        await new Promise((resolve) => setTimeout(resolve, 800));
         setIsSubmitting(false);
-        toast.success("Message sent! Our concierge team will respond within 24 hours.", {
+        toast("Portfolio Demo", {
+            description: "Contact form submission is disabled for this demonstration. Your message was not sent.",
             style: { background: "#1a1a1a", color: "#fff", border: "1px solid rgba(212,175,55,0.3)" },
         });
         reset();

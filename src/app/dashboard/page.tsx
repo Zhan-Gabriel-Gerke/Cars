@@ -43,20 +43,6 @@ export default async function DashboardPage() {
                 </header>
 
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-                    {/* Status Card */}
-                    <div className="rounded-xl border border-white/10 bg-dark-900/40 p-6 backdrop-blur-md">
-                        <h2 className="text-sm font-medium text-dark-300 uppercase tracking-wider mb-4">
-                            Membership Tier
-                        </h2>
-                        <div className="flex items-center gap-4">
-                            <div className="rounded-full bg-gold-400/10 p-4">
-                                <span className="text-2xl font-serif italic text-gold-400">Diamond</span>
-                            </div>
-                        </div>
-                        <p className="mt-4 text-sm text-dark-400">
-                            You have access to our entire global fleet.
-                        </p>
-                    </div>
 
                     {/* Role Status (Debug) */}
                     <div className="rounded-xl border border-white/10 bg-dark-900/40 p-6 backdrop-blur-md">
@@ -76,6 +62,23 @@ export default async function DashboardPage() {
                         </div>
                     </div>
                 </div>
+
+                {/* Admin Actions */}
+                {session.user.role === "ADMIN" && (
+                    <div className="mt-8 rounded-xl border border-gold-400/20 bg-dark-900/40 p-6 backdrop-blur-md">
+                        <h2 className="text-sm font-medium text-gold-400 uppercase tracking-wider mb-4">
+                            Admin Portal
+                        </h2>
+                        <div className="flex items-center">
+                            <Link
+                                href="/admin/fleet"
+                                className="inline-flex items-center justify-center rounded-md bg-gold-400 px-6 py-3 text-sm font-semibold text-dark-950 transition-colors hover:bg-gold-300 uppercase tracking-wider"
+                            >
+                                Manage Fleet
+                            </Link>
+                        </div>
+                    </div>
+                )}
 
             </div>
         </div>

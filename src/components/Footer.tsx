@@ -1,13 +1,22 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { Crown } from "lucide-react";
+import { Crown, Info } from "lucide-react";
+import { toast } from "sonner";
 import NewsletterForm from "./NewsletterForm";
 
 const exploreLinks = ["The Fleet", "Chauffeur Service", "Wedding Cars", "Corporate Events"];
 const companyLinks = ["About Us", "Testimonials", "Careers", "Press"];
 
 export default function Footer() {
+    const handleMockLink = (e: React.MouseEvent, linkName: string) => {
+        e.preventDefault();
+        toast("Portfolio Demo", {
+            description: `The ${linkName} page is not implemented for this demonstration.`,
+            icon: <Info className="h-5 w-5 text-gold-400" />,
+        });
+    };
+
     return (
         <footer id="contact" className="border-t border-white/[0.06] bg-dark-950">
             <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
@@ -59,6 +68,7 @@ export default function Footer() {
                                 <li key={link}>
                                     <a
                                         href="#"
+                                        onClick={(e) => handleMockLink(e, link)}
                                         className="text-sm text-dark-300 transition-colors duration-300 hover:text-gold-400"
                                     >
                                         {link}
@@ -83,6 +93,7 @@ export default function Footer() {
                                 <li key={link}>
                                     <a
                                         href="#"
+                                        onClick={(e) => handleMockLink(e, link)}
                                         className="text-sm text-dark-300 transition-colors duration-300 hover:text-gold-400"
                                     >
                                         {link}

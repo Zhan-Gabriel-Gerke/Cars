@@ -7,5 +7,5 @@ export interface Car {
     engine: string;   // e.g., "V12", "H6"
     transmission: string; // e.g., "Auto", "PDK"
     pricePerDay: number;
-    imageUrl: string;
+    imageUrl: string | null;
 }

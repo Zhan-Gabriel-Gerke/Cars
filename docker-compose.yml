@@ -33,12 +33,16 @@ services:
     environment:
       DATABASE_URL: "postgresql://postgres:postgres@db:5432/elite_cars?schema=public"
       AUTH_SECRET: "${AUTH_SECRET}"
-      AUTH_URL: "http://localhost:3000"
+      AUTH_URL: "http://localhost:3001"
       NODE_ENV: production
     depends_on:
       db:
         condition: service_healthy
+    volumes:
+      - nextjs_uploads:/app/uploads
 
 volumes:
   postgres_data:
+    driver: local
+  nextjs_uploads:
     driver: local

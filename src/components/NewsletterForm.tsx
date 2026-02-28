@@ -33,14 +33,14 @@ export default function NewsletterForm() {
     const onSubmit = async (data: FormData) => {
         setIsSubmitting(true);
 
-        // Simulate API call
-        await new Promise((resolve) => setTimeout(resolve, 1500));
+        // Simulate API call for realistic UI feel
+        await new Promise((resolve) => setTimeout(resolve, 800));
 
         setIsSubmitting(false);
         reset();
 
-        toast.success("Welcome to the Elite circle!", {
-            description: `We'll send exclusive offers to ${data.email}`,
+        toast("Portfolio Demo", {
+            description: "Newsletter subscription is disabled for this demonstration. Your email was not saved.",
             icon: <CheckCircle2 className="h-5 w-5 text-gold-400" />,
         });
     };

@@ -149,9 +149,21 @@ export function CarForm({ car, onSuccess, onCancel }: CarFormProps) {
                     )}
                 </div>
 
-                {/* Image URL */}
+                {/* Image Upload */}
                 <div>
-                    <label className="block text-sm font-medium text-dark-200 mb-1">Image URL (Optional)</label>
+                    <label className="block text-sm font-medium text-dark-200 mb-1">Upload Image</label>
+                    <input
+                        name="imageFile"
+                        type="file"
+                        accept="image/*"
+                        disabled={isPending}
+                        className="w-full text-white file:mr-4 file:py-2 file:px-4 file:rounded-md file:border-0 file:text-sm file:font-semibold file:bg-dark-800 file:text-gold-400 hover:file:bg-dark-700 cursor-pointer disabled:opacity-50 text-sm"
+                    />
+                </div>
+
+                {/* Legacy Image URL */}
+                <div>
+                    <label className="block text-sm font-medium text-dark-200 mb-1">Or paste Image URL</label>
                     <input
                         name="imageUrl"
                         defaultValue={car?.imageUrl || ""}

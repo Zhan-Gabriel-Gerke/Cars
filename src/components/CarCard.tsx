@@ -3,6 +3,7 @@
 import { motion } from "framer-motion";
 import { Users, Gauge, Fuel, Settings, ArrowRight } from "lucide-react";
 import Image from "next/image";
+import Link from "next/link";
 import type { Car } from "@/types/car";
 
 interface CarCardProps {
@@ -82,10 +83,10 @@ export function CarCard({ car, index }: CarCardProps) {
                         <span className="text-xl font-bold text-gold-400">${car.pricePerDay.toLocaleString()}</span>
                         <span className="text-xs text-dark-400 ml-1">/day</span>
                     </div>
-                    <button className="flex items-center gap-1.5 text-xs font-semibold text-gold-400 uppercase tracking-wider transition-all duration-300 hover:gap-3 group/btn">
-                        Reserve
+                    <Link href="/#contact" className="flex items-center gap-1.5 text-xs font-semibold text-gold-400 uppercase tracking-wider transition-all duration-300 hover:gap-3 group/btn">
+                        Contact
                         <ArrowRight className="h-3.5 w-3.5 transition-transform duration-300 group-hover/btn:translate-x-0.5" />
-                    </button>
+                    </Link>
                 </div>
             </div>
         </motion.div>
