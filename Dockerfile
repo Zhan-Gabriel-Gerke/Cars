@@ -56,4 +56,5 @@ USER nextjs
 
 EXPOSE 3000
 
-CMD ["node", "server.js"]
+# Run Prisma schema push (db migrations) and then start the server
+CMD if [ -f "./node_modules/.bin/prisma" ]; then ./node_modules/.bin/prisma db push; else npx prisma db push; fi && node server.js
