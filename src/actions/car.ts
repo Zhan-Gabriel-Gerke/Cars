@@ -1,7 +1,5 @@
 "use server";
 
-import fs from "fs";
-import path from "path";
 import { auth } from "@/auth";
 import { prisma } from "@/lib/prisma";
 import { revalidatePath } from "next/cache";
@@ -50,17 +48,18 @@ export async function createCar(prevState: CarActionState, formData: FormData): 
         const imageFile = formData.get("imageFile") as File | null;
         let finalImageUrl = formData.get("imageUrl") as string | null;
 
-        if (imageFile && imageFile.name && imageFile.name !== "undefined" && imageFile.size > 0) {
-            const buffer = Buffer.from(await imageFile.arrayBuffer());
-            const uniqueSuffix = `${Date.now()}-${Math.round(Math.random() * 1e9)}`;
-            const filename = `${uniqueSuffix}-${imageFile.name.replace(/\s+/g, "_")}`;
-            const uploadDir = path.join(process.cwd(), "uploads");
-
-            await fs.promises.mkdir(uploadDir, { recursive: true });
-            await fs.promises.writeFile(path.join(uploadDir, filename), buffer);
-
-            finalImageUrl = `/api/uploads/${filename}`;
+        if (!imageFile || imageFile.size === 0 || imageFile.name === "undefined") {
+            return { error: "Image file is required." };
         }
+        if (imageFile.size > 5 * 1024 * 1024) {
+            return { error: "Image size exceeds 5MB limit." };
+        }
+        if (!imageFile.type.startsWith("image/")) {
+            return { error: "Invalid file type. Only images are allowed." };
+        }
+
+        const buffer = Buffer.from(await imageFile.arrayBuffer());
+        const mimeType = imageFile.type;
 
         const rawData = {
             category: formData.get("category"),
@@ -81,8 +80,18 @@ export async function createCar(prevState: CarActionState, formData: FormData): 
             };
         }
 
-        await prisma.car.create({
-            data: validatedFields.data,
+        const car = await prisma.car.create({
+            data: {
+                ...validatedFields.data,
+                image: buffer,
+                mimeType,
+            },
+        });
+
+        // Set the imageUrl pointing to the API route dynamically based on the DB ID.
+        await prisma.car.update({
+            where: { id: car.id },
+            data: { imageUrl: `/api/images/${car.id}` },
         });
 
         revalidatePath("/admin/fleet");
@@ -103,16 +112,18 @@ export async function updateCar(id: string, prevState: CarActionState, formData:
         const imageFile = formData.get("imageFile") as File | null;
         let finalImageUrl = formData.get("imageUrl") as string | null;
 
+        let buffer: Buffer | undefined;
+        let mimeType: string | undefined;
+
         if (imageFile && imageFile.name && imageFile.name !== "undefined" && imageFile.size > 0) {
-            const buffer = Buffer.from(await imageFile.arrayBuffer());
-            const uniqueSuffix = `${Date.now()}-${Math.round(Math.random() * 1e9)}`;
-            const filename = `${uniqueSuffix}-${imageFile.name.replace(/\s+/g, "_")}`;
-            const uploadDir = path.join(process.cwd(), "uploads");
-
-            await fs.promises.mkdir(uploadDir, { recursive: true });
-            await fs.promises.writeFile(path.join(uploadDir, filename), buffer);
-
-            finalImageUrl = `/api/uploads/${filename}`;
+            if (imageFile.size > 5 * 1024 * 1024) {
+                return { error: "Image size exceeds 5MB limit." };
+            }
+            if (!imageFile.type.startsWith("image/")) {
+                return { error: "Invalid file type. Only images are allowed." };
+            }
+            buffer = Buffer.from(await imageFile.arrayBuffer());
+            mimeType = imageFile.type;
         }
 
         const rawData = {
@@ -134,9 +145,16 @@ export async function updateCar(id: string, prevState: CarActionState, formData:
             };
         }
 
+        const updateData: any = { ...validatedFields.data };
+        if (buffer && mimeType) {
+            updateData.image = buffer;
+            updateData.mimeType = mimeType;
+            updateData.imageUrl = `/api/images/${id}`;
+        }
+
         await prisma.car.update({
             where: { id },
-            data: validatedFields.data,
+            data: updateData,
         });
 
         revalidatePath("/admin/fleet");

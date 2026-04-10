@@ -1,6 +1,7 @@
 import { signIn } from "@/auth";
 import { redirect } from "next/navigation";
 import { revalidatePath } from "next/cache";
+import { isRedirectError } from "next/dist/client/components/redirect";
 // @ts-expect-error - CredentialsSignin is not typed
 import { CredentialsSignin, AuthError } from "next-auth";
 import Link from "next/link";
@@ -56,6 +57,8 @@ export default async function SignInPage(
                         try {
                             await signIn("credentials", formData);
                         } catch (error: any) {
+                            if (isRedirectError(error)) throw error;
+
                             console.log("LOGIN CATCH:", {
                                 name: error?.name,
                                 message: error?.message,

@@ -1,7 +1,5 @@
 services:
-  # ===========================================
   # PostgreSQL 16
-  # ===========================================
   db:
     image: postgres:16-alpine
     restart: unless-stopped
@@ -20,9 +18,7 @@ services:
       retries: 10
       start_period: 10s
 
-  # ===========================================
   # Next.js Application
-  # ===========================================
   web:
     build:
       context: .
@@ -31,7 +27,8 @@ services:
     ports:
       - "3001:3000"
     environment:
-      DATABASE_URL: "${DATABASE_URL}"
+      # ЖЕСТКАЯ СБОРКА: Compose сам подставит сюда юзера, пароль и базу из .env
+      DATABASE_URL: "postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@db:5432/${POSTGRES_DB}?schema=public"
       AUTH_SECRET: "${AUTH_SECRET}"
       AUTH_URL: "http://localhost:3001"
       NODE_ENV: production
