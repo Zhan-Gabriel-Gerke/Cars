@@ -62,6 +62,6 @@ USER nextjs
 
 EXPOSE 3000
 
-# For Render deployment: run prisma db push to apply schema, then start the server
+# For Render/Orchestrator deployment: run prisma db push to apply schema, then start the server
 # --accept-data-loss ensures it doesn't block waiting for interactive input on schema changes
-CMD npx prisma db push --accept-data-loss && node server.js
+CMD ["sh", "-c", "npx prisma db push --accept-data-loss && exec node server.js"]

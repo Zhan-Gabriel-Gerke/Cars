@@ -1,9 +1,5 @@
 import { signIn } from "@/auth";
 import { redirect } from "next/navigation";
-import { revalidatePath } from "next/cache";
-import { isRedirectError } from "next/dist/client/components/redirect";
-// @ts-expect-error - CredentialsSignin is not typed
-import { CredentialsSignin, AuthError } from "next-auth";
 import Link from "next/link";
 import ForgotPasswordLink from "@/components/ForgotPasswordLink";
 
@@ -57,33 +53,13 @@ export default async function SignInPage(
                         try {
                             await signIn("credentials", formData);
                         } catch (error: any) {
-                            if (isRedirectError(error)) throw error;
-
-                            console.log("LOGIN CATCH:", {
-                                name: error?.name,
-                                message: error?.message,
-                                type: error?.type,
-                            });
-
-                            // Check if it's a redirect error from next/navigation
-                            if (error?.message === "NEXT_REDIRECT") {
-                                // Let Next.js handle it
+                            if (
+                                error?.message === "NEXT_REDIRECT" ||
+                                error?.name === "RedirectError"
+                            ) {
                                 throw error;
                             }
-
-                            // If it's an AuthError or CredentialsSignin, redirect manually
-                            if (error?.name === "CredentialsSignin" || error?.type === "CredentialsSignin" || error instanceof CredentialsSignin || error?.name === "u") {
-                                revalidatePath("/auth/signin");
-                                redirect("/auth/signin?error=CredentialsSignin");
-                            }
-
-                            // Fallback for NextAuth errors
-                            if (error?.message?.includes("Credential") || String(error).includes("Credentials") || error?.message?.includes("errors.authjs.dev")) {
-                                revalidatePath("/auth/signin");
-                                redirect("/auth/signin?error=CredentialsSignin");
-                            }
-
-                            throw error;
+                            redirect("/auth/signin?error=CredentialsSignin");
                         }
                     }}
                     className="space-y-6"
